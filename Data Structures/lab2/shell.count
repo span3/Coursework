@@ -1,0 +1,14 @@
+   1072 /bin/tcsh
+      1 /bin/false
+      1 /bin/null
+      1 /bin/sync
+      1 /sbin/halt
+      1 /sbin/shutdown
+  22995 /bin/csh
+      2 /bin/ksh
+      2 /bin/sh
+      3 
+     31 /sbin/nologin
+      3 /bin/closeshell
+    689 /bin/bash
+      9 /bin/zsh

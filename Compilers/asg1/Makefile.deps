@@ -1,0 +1,2 @@
+auxlib.o: auxlib.cc auxlib.h
+cppstrtok.o: cppstrtok.cc auxlib.h

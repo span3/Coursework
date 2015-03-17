@@ -1,0 +1,83 @@
+// $Id: errno.c,v 1.1 2011-01-26 14:42:34-08 - - $
+// Leodegario Anacleto (lanaclet@ucsc.edu)
+
+/*
+* NAME
+*      errno -- translate system error numbers into text messages
+* 
+* SYNOPSIS
+*      errno [-a] [-e status] [errno...]
+* 
+* DESCRIPTION
+*      The errno utility prints out some the system call error code
+*      numbers and their text equivalents.
+* 
+* OPTIONS
+*      All options must precede all operands and are scanned with the
+*      function getopt(3c).
+* 
+*      -a   All of the system error codes are printed.
+* 
+*      -e status
+*           The program returns a status code given by status.
+* 
+* OPERANDS
+*      Each operand is a numeric system error code which is printed
+*      along with its text equivalent.  Operands are ignored if the -a
+*      option is given.
+* 
+* EXIT STATUS
+* 
+*      0    If no -e option is given and no errors are detected.
+* 
+*      1    If no -e option is given but errors are detected.
+* 
+*      n    The -e options specifies the exit status.
+* 
+* SEE ALSO
+*      errno(3c), getopt(3c), printf(3c), strerror(3c), strtol(3c).
+*/
+
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef enum {FALSE=0, TRUE=1} bool;
+char *progname = NULL;
+
+char *stringbool (bool arg) {
+   return arg ? "TRUE" : "FALSE";
+}
+char *stringstr (char *arg) {
+   return arg ? arg : "<NULL>";
+}
+
+void eprintf (const char *format, ...) {
+   va_list args;
+   va_start (args, format);
+   fflush (NULL);
+   vfprintf (stderr, format, args);
+   va_end (args);
+   fflush (NULL);
+}
+
+int main (int argc, char **argv) {
+
+   progname = basename (argv[0]);
+   bool wantusageexit = FALSE;
+
+   opterr = FALSE;
+   for(;;) {
+      int option = getopt (argc, argv, "fbo:u:");
+      if (option == EOF) break;
+      switch (option) {
+         case 'a': 
+         case 'e': 
+         default : eprintf ("%s: -%c: invalid option\n",
+                            progname, optopt);
+                   wantusageexit = TRUE;
+      };
+   };
+   return EXIT_SUCCESS;
+}
+

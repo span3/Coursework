@@ -1,0 +1,43 @@
+Script started on Wed 04 May 2011 03:16:14 PM PDT
+private/cmps012b: No such file or directory.
+[fcarril1@unix3 lab5]$ gdb uninit
+GNU gdb (GDB) Red Hat Enterprise Linux (7.0.1-23.el5_5.2)
+Copyright (C) 2009 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from /afs/cats.ucsc.edu/users/h/fcarril1/private/cmps012b/lab5/uninit...done.
+(gdb) break main
+Breakpoint 1 at 0x4004d7: file uninit.c, line 8.
+(gdb) run
+Starting program: /afs/cats.ucsc.edu/users/h/fcarril1/private/cmps012b/lab5/uninit 
+private/cmps012b: No such file or directory.
+
+Breakpoint 1, main (argc=1, argv=0x7fffffffe4d8) at uninit.c:8
+8	   printf ("%d\n", foo);
+(gdb) print foo
+$1 = 32767
+(gdb) step
+32767
+10	   printf ("%d\n", *pointer);
+(gdb) print pointer
+$2 = (int *) 0x0
+(gdb) step
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004ed in main (argc=1, argv=0x7fffffffe4d8) at uninit.c:10
+10	   printf ("%d\n", *pointer);
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 10514] will be killed.
+
+Quit anyway? (y or n) y
+[fcarril1@unix3 lab5]$ exit
+exit
+
+Script done on Wed 04 May 2011 03:16:47 PM PDT

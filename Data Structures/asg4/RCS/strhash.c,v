@@ -1,0 +1,37 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.1
+date	2011.05.24.07.57.56;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@// $Id: strhash.c,v 1.1 2011-05-06 19:28:30-07 - - $
+
+#include <assert.h>
+#include <stdio.h>
+#include <sys/types.h>
+
+#include "strhash.h"
+
+hashcode_t strhash (char *string) {
+   assert (string != NULL);
+   hashcode_t hashcode = 0;
+   while (*string) hashcode = hashcode * 31 + (unsigned char) *string++;
+   return hashcode;
+}
+@

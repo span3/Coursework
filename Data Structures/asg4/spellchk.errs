@@ -1,0 +1,132 @@
+<rtc> Read from uninitialized (rui):
+Attempting to read 1 byte at address 0xb66d238
+    which is at start of heap block of size 4 bytes at 0xb66d238
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Location of error:
+=>[1] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [2] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Write to unallocated (wua):
+Attempting to write 1 byte at address 0xb66cfd0
+    which is just past heap block of size 8 bytes at 0xb66cfc8
+This block was allocated from:
+	[1] load_dictionary() at line 54 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Location of error:
+=>[1] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [2] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from uninitialized (rui):
+Attempting to read 1 byte at address 0xb66d238
+    which is at start of heap block of size 4 bytes at 0xb66d238
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d238 "h.^UÖ;"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d238 "h.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from uninitialized (rui):
+Attempting to read 1 byte at address 0xb66d238
+    which is at start of heap block of size 4 bytes at 0xb66d238
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d238 "h.^UÖ;"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d238 "h.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from unallocated (rua):
+Attempting to read 1 byte at address 0xb66d23c
+    which is just past heap block of size 4 bytes at 0xb66d238
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d23c ";"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d238 "h.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from unallocated (rua):
+Attempting to read 1 byte at address 0xb66d23c
+    which is just past heap block of size 4 bytes at 0xb66d238
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d23c ";"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d238 "h.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from uninitialized (rui):
+Attempting to read 1 byte at address 0xb66d258
+    which is at start of heap block of size 1 byte at 0xb66d258
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'item'
+Location of error:
+=>[1] put_hashset(hashset = 0xb66d608, item = 0xb66d258 "h.^UÖ;"), line 49 in "hashset.c"
+  [2] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [3] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from unallocated (rua):
+Attempting to read 1 byte at address 0xb66d298
+    which is just past heap block of size 0 bytes at 0xb66d298
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Location of error:
+=>[1] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [2] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from out-of-bounded (rob):
+Attempting to read 1 byte at address 0xb66d298
+    which is just past heap block of size 0 bytes at 0xb66d298
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d298 "X.^UÖ;"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d298 "X.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from out-of-bounded (rob):
+Attempting to read 1 byte at address 0xb66d298
+    which is just past heap block of size 0 bytes at 0xb66d298
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'string'
+Location of error:
+=>[1] strhash(string = 0xb66d298 "X.^UÖ;"), line 12 in "strhash.c"
+  [2] put_hashset(hashset = 0xb66d608, item = 0xb66d298 "X.^UÖ;"), line 44 in "hashset.c"
+  [3] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [4] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+
+<rtc> Read from unallocated (rua):
+Attempting to read 1 byte at address 0xb66d298
+    which is just past heap block of size 0 bytes at 0xb66d298
+This block was allocated from:
+	[1] load_dictionary() at line 60 in "spellchk.c"
+	[2] main() at line 96 in "spellchk.c"
+Variable is 'item'
+Location of error:
+=>[1] put_hashset(hashset = 0xb66d608, item = 0xb66d298 "X.^UÖ;"), line 49 in "hashset.c"
+  [2] load_dictionary(dictionary_name = 0x40344b "/usr/share/dict/words", hashset = 0xb66d608), line 62 in "spellchk.c"
+  [3] main(argc = 1, argv = 0x7fffaa4173f8), line 97 in "spellchk.c"
+

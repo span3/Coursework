@@ -1,0 +1,75 @@
+Project 3: Memory Allocation
+Steven Pan	<span3@ucsc.edu>
+CMPS 111, Winter 2014
+
+Purpose:
+
+The purpose of this project is to create a memory allocation library for the Minix
+3.1.8 operating system.  The library will contain methods to initiate, allocate,
+and free memory using a buddy allocator or list based allocation.  In the case of
+list allocation, there will also be first fit, next-fit, best-fit, worst-fit, and 
+random-fit algorithms, and we will be comparing their efficiencies.
+
+Available Resources:
+
+The fit algorithms are described in our textbook (Modern Operating Systems by
+Andres S. Tenanbaum).  In addition, we were given some pointers in lab, some
+of which can be found on the pdf in the Piazza resources.
+
+Design:
+
+Main functions
+	int meminit(long n_bytes, unsigned int flags, int parm1)
+		Calls meminit from buddy or list allocator depending on the flag passed in.
+		Return the flag
+	void* memalloc(long n_bytes, int handle)
+		Calls memalloc from buddy or list allocator depending on flag passed in.
+		Return pointer to new memory block.
+	void memfree(void *region)
+		Frees the region that has the address, could be buddy or list.
+
+Buddy Allocator
+	int meminit(int n_bytes, unsigned int flags, int parm1)
+		check that n_bytes is a power of 2
+			error if not
+		initialize memory
+			set aside a large segment of memory
+	
+	void *memalloc (int handle, int n_bytes)
+		check that n_bytes is a power of 2
+			error if not
+		iteratea through blocks in the memory
+			if buddy is being used and can fit n_bytes
+				use this region and return the pointer
+			otherwise check the next chucnk
+	
+	void memfree (void *region)
+		check that the buddy is also free
+			free both the region and its buddy
+		otherwise free the next chunk
+		
+List Allocator
+	int meminit(int n_bytes, unsigned flags, int parm1)
+		take in flags
+		set aside a large segment of memory
+	
+	void *memalloc (int handle, int n_bytes)
+		one of the fit algorithms is chosen
+			first fit
+				check if block is larger than n_bytes
+					use block if it is
+			best fit 
+				check if block is larger than n_bytes but also less than current best
+					change block to best if it is
+			worst fit
+				check if block is larger than n_bytes and larger than current worst
+					change block to worst if it is
+			random fit
+				choose a block at random, check if it is larger than n_bytes
+					use block if it is
+
+Testing:
+
+The test strategy will be to make a simple program that calls the memory allocator
+in various ways.  Using this, we can run some simple routines and compare how
+well each algorithm works.

@@ -1,0 +1,13 @@
+Steven Pan (span3@ucsc.edu)
+5/13/12
+CMPS101
+Programming Assignment #2
+
+Compile the program by entering make, which will compile the program using the Makefile supplied.
+Attached are test.data, test2.data and test3.data, each of which test various cases of graphs.
+test.data is a simple cycle, whereas test2.data and test3.data contain more bad edges and multiple
+vertices.
+
+The program returns segmentation faults, which I was unable to find the source of.  However, I
+have went through my algorithms multiple times, and am quite confident that they are correct.
+

@@ -1,0 +1,45 @@
+Partner: nanhnguy@ucsc.edu
+
+In this assignment, we got help from the CS109 book, teacher assistants, 
+online resources. In this program, we made a class that will make a board, 
+take in any size up to 13. We learned to make the connections for a hex board 
+for the different types of nodes on it. We did this by using the equations to 
+convert x and y coordinates into node numbers and vice versa. We put the 
+appropriate connections into the adjacency list. We learned to build the structure
+of the game, which means the board graphic shows up with the appropriate moves picked.
+Also we learned to make different sets to put the values picked by black and white 
+in there. These sets would be used for evaluation for win-lose condition. 
+White player goes first and will be the player. The black player will be the AI 
+and goes next. We learned to implement the pie rule right after the first white move, 
+and make the black player/AI use it or not use it under special conditions.
+
+For the AI, we used the Monte Carlo algorithm. We learned the concept from class 
+lectures and online resources. We learned to do simulation of the boards so the 
+black player/AI pick the best moves against white player. We learned to go through 
+the all possible nodes for black and check win conditions. We have the simulation 
+500 times to get more accurate probability of win and pick the best between black 
+and white probability to win. You can change the value to 1000 for more accuracy 
+but it is really slow. After each calculation of probability, we learned to compare
+with the max probability and finally the AI picks the black node that generates 
+the most win probability. We talked to professor Pohl and he said the AI is okay. 
+We learned that the AI is better if the board is smaller and/or the number of 
+simulation increase. For example, we tested the program on the 7x7 board and the 
+AI makes more sensible moves than in the 11x11 board.
+
+We did the win-lose conditions for the Monte Carlo simulation and the real game by 
+using breadth first search 
+(http://www.geeksforgeeks.org/breadth-first-traversal-for-a-graph/). 
+We check the condition by going through all the values in the set and cross 
+check their connections. If there is a path between top and bottom for white, 
+or check if there is a path between left and right for black, then the function 
+will check if white or black win. By using a queue to look through possible connections
+from nodes on top row to nodes on bottom row for white, and do similar calculations 
+for black moves. We also learned to check for multiple different conditions to make 
+the win-lose check more accurate.
+
+When testing the check win condition and AI, you can just start from top and 
+keep going bottom to see white wins, or let the AI complete left to right path and 
+black wins.
+
+Compile: g++ -O3 hw5.cpp -o hw5
+Run: ./hw5

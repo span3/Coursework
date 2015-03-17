@@ -1,0 +1,12 @@
+this is a test
+of some data
+strings should sort
+IN LEXICOGRAPHIC ORDER
+(i.e., not in alphabetic order)
+SO THAT UPPER LINES COME BEFORE LOWER LINES
+!@#$%^&*()_+| and special characters are first
+[except for brackets]
+see an ASCII table
+or just run sort
+$Id: data.lsort.good.in,v 1.1 2011-04-26 18:40:34-07 - - $
+

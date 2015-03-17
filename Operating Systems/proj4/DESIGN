@@ -1,0 +1,81 @@
+Project 4: Encryption/Decryption
+Steven Pan	span3@ucsc.edu
+CMPS 111, Winter 2014
+
+Purpose:
+
+The purpose of this project is to design a system call for Minix 3.1.2 that will
+encrypt and decrypt keys.
+
+Available Resources:
+
+System calls:
+	chmod(), stat(), sys_vircopy()
+
+Encryption/decryption using AES cipher.
+
+Design:
+
+SETKEY:
+
+To implement the encryption, we have to add a new system call, SetKey.
+This call would set the encryption key and then pass it to the kernel so
+that the file would be decrypted when the correct key was entered.  The
+system also needs to keep track of the user ID that gives it the key, so that
+each user has their own key.
+
+Setkey would look something like this:
+	int setkey(unsigned int k0, unsigned int k1)
+		Create message.
+		Assign k0 to first int of message.
+		Assign k1 to second int of message.
+		Pass message to file system using do_setkey().
+		
+Setkey would then be placed in /usr/src/servers/fs.
+To have the system recognize the system call, we would have to modify table.c
+in the file system.  No other files should be able to call setkey.  callnr.h
+and proto.h will also need to have the setkey() system call added so that the
+system can interact with it.
+
+proto.h: _PROTOTYPE( void fs_setkey, (unsigned int k0, unsigned int k1));
+
+callnr.h: #define DO_SETKEY		0
+
+PROTECTFILE:
+
+Protectfile.c will be the program that handles encryption and decryption.
+The user would input a hexidecimal number (maximum 16 characters), e or d depending
+on which cryption they want, and the name of the file.  Encrypted files would have
+the sticky bit set by chmod, and a decrypted file would have its sticky bet cleared
+after the decryption.  Encryption and decryption will both be done using the AES
+cipher, given to us in aes.tar.
+
+Functions:
+int cryption(char *filename, char *hexkey, struct stat *filestat)
+	Based on encrypt.c
+	Read in file 16 bytes at a time, XOR with value, and write back to file.
+	
+int encryptfile(char *filename, char *key, struct stat *filestat)
+	Sets file sticky bit using chmod().
+	Calls cryption to encrypt file.
+	
+int decryptfile(char *filename, char *key, struct stat *filestat)
+	Clears file sticky bit using chmod().
+	Calls cryption to decrypt file.
+	
+int scanArgs(int args, char **argv, int *cryptflag)
+	Checks that 4 arguments are put in.
+	Check that encrypt or decrypt flag is specified
+	Check that file is there.
+	Check that hex number is valid.
+	
+int main(int argc, char **argv)
+	scanArgs to check arguments.
+	stat() to get file's bits and ID number.
+	Call encryptfile or decryptfile depending on the flag.
+	
+Testing:
+
+To test the program, I will move the files into the minix system, and then
+encrypt/decrypt using a few test files and numbers.  Testing will only be
+doable after both setkey and protectfile are implemented correctly.

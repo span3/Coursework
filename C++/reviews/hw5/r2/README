@@ -1,0 +1,37 @@
+Program 4 Hex With 7 Year Old Equivilent AI
+README
+May/24/2013
+
+COMPILE:
+gmake all
+
+RUN:
+./main or main
+
+CLEAN:
+gmake clean
+
+Program may randomly segfault, but montecarly is correctly implemented.
+In this assignment, i learned about how montycarlo works, and how it can be
+used to program a superiod AI in hex. An ai that is so good, that a human
+cannot beat it in some cases, but not this one. I also learned some cool
+stuff about the history , and how the current hex ai is unbeatable
+Besides that, I learned a lot about cramming and doing things last minute,
+but still finishing. I also learned that my partner sleeps with his phone
+on silent. I also learned alot about how 2d arrays in C/C++ work/used to work,
+and why for many 2d array types we must access them with A[x*(y-size)]. In 
+addition, i learned how annoying it can be to check all of the different possible
+moves and exceptions that can be made when programming an AI, and how, 
+if you do any of these wrong, the computer can cause the program to fail, 
+by playing in a place that doesnt exist. Luckily, montycarlo's algorythm
+made this process way easier. 
+In addition, i learned how to associate squares in a hex based array, 
+rather than a square based array, which allowed us to more efficently
+program hex, then another used method which was a shifted [][]array.
+Finally, i understand recursion a lot more now that we worked for so
+long on the method to recursively check to see if the game is over
+(ie: if a player has won). Finally, i am starting to see how useful
+creating nodes, and node arrays can be when creating non standard
+structures, such as a hex shaped game board.
+
+

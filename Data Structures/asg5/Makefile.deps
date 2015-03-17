@@ -1,0 +1,6 @@
+# Makefile.deps created Fri May 20 20:00:29 PDT 2011
+auxlib.o: auxlib.c auxlib.h
+huffman.o: huffman.c auxlib.h tree.h prioque.h
+prioque.o: prioque.c prioque.h tree.h auxlib.h
+tree.o: tree.c tree.h auxlib.h
+

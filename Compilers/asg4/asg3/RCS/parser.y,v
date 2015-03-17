@@ -1,0 +1,203 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.1
+date	2013.11.10.08.22.56;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@%{
+
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "lyutils.h"
+#include "astree.h"
+
+#define YYDEBUG 1
+#define YYERROR_VERBOSE 1
+#define YYMALLOC yycalloc
+
+static void* yycalloc (size_t size);
+
+%}
+
+%debug
+%defines
+%error-verbose
+%token-table
+%verbose
+
+%destructor { error_destructor ($$); } <>
+
+%token  ROOT IDENT INTEGER STRINGCONST CHARCONST
+%token	NUMBER CHAR STR VOID BOOL INT STRING
+%token  STRUCT IF ELSE WHILE RETURN NEW FALSE TRUE NUL ORD CHR
+%token  EQEQ BRACKETS NOTEQ LESSEQ GREATEQ
+
+%right  IF ELSE
+%right  '='
+%right	EQEQ NOTEQ '<' LESSEQ '>' GREATEQ
+%left   '+' '-'
+%left   '*' '/' '%'
+%right  POS "u+" NEG "u-" ORD CHR
+
+%start  program
+
+
+%%
+
+program : program structdef
+	| program function
+	| program statement
+	|
+	;
+
+structdef	: STRUCT IDENT '{' structdecl '}' 		{;}
+		;
+
+structdecl	: structdecl decl ';'	{;}
+		|			{;}
+		;
+
+decl	: type IDENT	{;}
+	;
+
+type	: basetype	{;}
+	| basetype BRACKETS	{;}
+	;
+
+basetype: VOID		{;}
+	| BOOL		{;}
+	| CHAR		{;}
+	| INT		{;}
+	| STRING	{;}
+	| IDENT		{;}
+	;
+
+function: type IDENT '(' ')' block	{;}
+	| type IDENT '(' decl functdecl ')' block {;}
+	;
+
+functdecl:functdecl ',' decl		{;}
+	|				{;}
+	;
+
+block	: '{' blockstate '}' 			{;}
+	| ';'				{;}
+	;
+
+blockstate: blockstate statement	{;}
+	|				{;}
+	;
+
+statement: block	{;}
+	|  vardecl	{;}
+	|  while	{;}
+	|  ifelse	{;}
+	|  return	{;}
+	|  expr ';'	{;}
+	;
+
+vardecl	: type IDENT '=' expr ';'	{;}
+	;
+
+while	: WHILE '(' expr ')' statement	{;}
+	;
+
+ifelse	: IF '(' expr ')' statement			{;}
+	| IF '(' expr ')' statement ELSE statement	{;}
+	;
+
+return	: RETURN ';'		{;}
+	| RETURN expr ';'	{;}
+	;
+
+expr	: binop			{;}
+	| unop			{;}
+	| allocator		{;}
+	| constant		{;}
+	| call			{;}
+	| variable		{;}
+	| '(' expr ')'		{;}
+	;
+
+binop	: expr '=' expr		{;}
+	| expr EQEQ expr	{;}
+	| expr NOTEQ expr	{;}
+	| expr '<' expr		{;}
+	| expr LESSEQ expr	{;}
+	| expr '>' expr		{;}
+	| expr GREATEQ expr	{;}
+	| expr '+' expr		{;}
+	| expr '-' expr		{;}
+	| expr '*' expr		{;}
+	| expr '%' expr		{;}
+	| expr '/' expr		{;}
+	;
+
+unop	: '+' expr		{;}
+	| '-' expr		{;}
+	| '!' expr		{;}
+	| ORD expr		{;}
+	| CHR expr		{;}
+	| NEW expr		{;}
+	;
+
+allocator: NEW basetype '(' ')'		{;}
+	| NEW basetype '(' expr ')'	{;}
+	| NEW basetype '[' expr ']'	{;}
+	;
+
+variable: IDENT				{;}
+	| expr '[' expr ']'		{;}
+	| expr '.' IDENT		{;}
+	;
+
+call	: IDENT '(' ')'			{;}
+	| IDENT	'(' expr callexpr ')'	{;}
+	;
+
+callexpr: callexpr ',' expr		{;}
+	|				{;}
+	;
+
+constant: INTEGER
+	| CHARCONST
+	| STRINGCONST
+	| FALSE
+	| TRUE
+	| NUL
+	;
+
+%%
+
+const char* get_yytname (int symbol) {
+   return yytname [YYTRANSLATE (symbol)];
+}
+
+bool is_defined_token (int symbol) {
+   return YYTRANSLATE (symbol) > YYUNDEFTOK;
+}
+
+static void* yycalloc (size_t size) {
+   void* result = calloc (1, size);
+   assert (result != NULL);
+   return result;
+}
+@

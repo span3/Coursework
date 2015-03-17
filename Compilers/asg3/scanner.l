@@ -1,0 +1,87 @@
+%{
+// $Id: scanner.l,v 1.1 2013-10-28 11:10:46-07 - - $
+
+#include "auxlib.h"
+#include "lyutils.h"
+
+#define YY_USER_ACTION  { scanner_useraction (); }
+#define IGNORE(THING)   { }
+
+%}
+
+%option 8bit
+%option debug
+%option ecs
+%option nodefault
+%option nounput
+%option noyywrap
+%option perf-report
+%option verbose
+%option warn
+
+LETTER          [A-Za-z_]
+DIGIT           [0-9]
+INTEGER         ({DIGIT}+)
+CHARCONST	(([^\\\n]|\\[\\"0nt]))
+STRINGCONST	(\"([^\\"\n]|\\[\\"0nt])*\")
+IDENT           ({LETTER}({LETTER}|{DIGIT})*)
+
+%%
+
+void		{ return yylval_token (VOID); }
+bool		{ return yylval_token (BOOL); }
+char		{ return yylval_token (CHAR); }
+int		{ return yylval_token (INT); }
+string		{ return yylval_token (STRING); }
+struct		{ return yylval_token (STRUCT); }
+if		{ return yylval_token (IF); }
+else		{ return yylval_token (ELSE); }
+while		{ return yylval_token (WHILE); }
+return		{ return yylval_token (RETURN); }
+new		{ return yylval_token (NEW); }
+false		{ return yylval_token (FALSE); }
+true		{ return yylval_token (TRUE); }
+null		{ return yylval_token (NUL); }
+ord		{ return yylval_token (ORD); }
+chr		{ return yylval_token (CHR); }
+
+"#".*           { scanner_include(); }
+[ \t]+          { IGNORE (white space) }
+\n              { scanner_newline(); }
+
+{IDENT}         { return yylval_token (IDENT); }
+{INTEGER}	{ return yylval_token (INT); }
+
+"=="		{ return yylval_token (EQEQ); }
+"[]"		{ return yylval_token (ARRAY); }
+"!="		{ return yylval_token (NOTEQ); }
+"<="		{ return yylval_token (LESSEQ); }
+">="		{ return yylval_token (GREATEQ); }
+"="             { return yylval_token ('='); }
+"<"		{ return yylval_token ('<'); }
+">"		{ return yylval_token ('>'); }
+"+"             { return yylval_token ('+'); }
+"-"             { return yylval_token ('-'); }
+"*"             { return yylval_token ('*'); }
+"/"             { return yylval_token ('/'); }
+"%"		{ return yylval_token ('%'); }
+"!"		{ return yylval_token ('!'); }
+"("             { return yylval_token ('('); }
+")"             { return yylval_token (')'); }
+"["		{ return yylval_token ('['); }
+"]"		{ return yylval_token (']'); }
+"{"		{ return yylval_token ('{'); }
+"}"		{ return yylval_token ('}'); }
+";"             { return yylval_token (';'); }
+","		{ return yylval_token (','); }
+"."		{ return yylval_token ('.'); }
+
+{CHARCONST}	{ return yylval_token (CHAR); }
+{STRINGCONST}	{ return yylval_token (STRING); }
+
+.               { scanner_badchar (*yytext); }
+
+%%
+
+RCSC("$Id: scanner.l,v 1.1 2013-10-28 11:10:46-07 - - $")
+

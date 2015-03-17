@@ -1,0 +1,4 @@
+# Makefile.deps created Thu May 19 22:14:46 PDT 2011
+auxlib.o: auxlib.c auxlib.h
+main.o: main.c auxlib.h queue.h
+queue.o: queue.c queue.h auxlib.h

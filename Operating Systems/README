@@ -1,0 +1,7 @@
+Project 1 Due: 1/21/14
+Steven Pan     span3@ucsc.edu
+
+Run instructions: make all to compile, shell to run.
+
+Extra notes:  I wasn't able to set up minix, so I'm not sure if my program would work in it.  It should work fine in linux though.
+

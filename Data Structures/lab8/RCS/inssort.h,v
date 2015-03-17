@@ -1,0 +1,25 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.1
+date	2011.05.26.03.29.53;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@void insertion_sort(void *base, size_t nelem, size_t size,
+                    int (*compar) (const void*, const void*));
+@

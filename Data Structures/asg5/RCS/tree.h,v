@@ -1,0 +1,42 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.1
+date	2011.06.03.23.45.21;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@// $Id: tree.h,v 1.1 2010-11-19 17:27:40-08 - - $
+
+#ifndef __FREQTREE_H__
+#define __FREQTREE_H__
+
+typedef struct tree *tree_ref;
+
+tree_ref new_tree (int charval, int frequency,
+             tree_ref left, tree_ref right);
+
+void free_tree (tree_ref);
+
+int cmp_tree (tree_ref, tree_ref);
+
+char **encode_tree (tree_ref);
+
+#endif
+
+
+@

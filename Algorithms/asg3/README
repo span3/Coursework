@@ -1,0 +1,8 @@
+Name: Steven Pan (span3@ucsc.edu)
+Class: CMPS 101
+Program 3: dfsTrace.c
+
+Compile the program by typing make.  This will call the Makefile in the directory
+and compile the program accordingly.  Run the program by tping dfsTrace (filename).
+This will run the program on a file.  The test inputs included are simple graphs
+that were used to test the program's output.

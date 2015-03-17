@@ -1,0 +1,12 @@
+.mt 8
+.tl 'left % title'middle % title'right % title'
+\n is just printed as a literal character and does not have any special meaning even when the line that contains it is so long as to be obnoxious.
+.ll 0
+causes one word to be printd per line.
+.ll 50
+.sp
+When you format this file, are stdout and stderr used properly?
+.br
+And does echo $status show 1 rather than 0?
+
+$Id: in3.titles.rf,v 1.1 2011-04-08 17:21:44-07 - - $

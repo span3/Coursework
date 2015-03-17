@@ -1,0 +1,75 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.2
+date	2011.05.24.07.58.18;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2011.05.24.07.57.56;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@%{
+// $Id: scanner.l,v 1.1 2011-05-24 00:57:56-07 - - $
+
+#include <stdlib.h>
+
+#include "auxlib.h"
+#include "yyextern.h"
+
+%}
+
+%option 8bit
+%option debug
+%option ecs
+%option interactive
+%option nodefault
+%option noyywrap
+%option yylineno
+
+NUMBER  ([[:digit:]]+([-:.][[:digit:]]+)*)
+WORD    ([[:alnum:]]+([-&'.][[:alnum:]]+)*)
+OTHER   (.|\n)
+
+%%
+
+{NUMBER}        { }
+{WORD}          { return 1;  }
+{OTHER}         { }
+
+%%
+
+void yycleanup (void) {
+   yy_delete_buffer (YY_CURRENT_BUFFER);
+}
+@
+
+
+1.1
+log
+@-
+@
+text
+@d2 1
+a2 1
+// $Id: scanner.l,v 1.1 2011-05-06 19:28:30-07 - - $
+a33 2
+
+	
+@

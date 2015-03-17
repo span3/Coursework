@@ -1,0 +1,468 @@
+#ifndef GRAPHNODE_H
+#define GRAPHNODE_H
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include "edge.h"
+#include "node.h"
+
+using namespace std;
+
+// Generates a matrix with set edges and colors.
+// The matrix shows the distance and color of edges
+// as shown:
+//          1   2   3
+//         ___________
+//    1   | 0 | 5 | 6 |     Cell (2,3) shows the distance
+//        |---|---|---|     from nodes 2 to 3. (3,2) has
+//    2   | 5 | 0 | 1 |     the same distance since it shows
+//        |---|---|---|     the distance from node 3 to 2,
+//    3   | 6 | 1 | 0 |     which is the same thing.
+//        -------------
+//
+
+class GraphNode {
+private:
+	int size; // Number of nodes/edges (prevents magic numbers)
+	double* dist;         // Stores shortest path from 1 to 2, 3, ... , 50
+	Edge** graph; //Pointer to matrix of edges with distances and colors
+	Node* nodes;          // Stores all the nodes in one array
+	bool* visited;         // Keeps track of which nodes have been visited
+	bool isRed;
+	bool isGreen;
+	bool isBlue;
+	bool** edgeArray;
+	bool** chosenEdges;
+
+public:
+
+	void setUp() {
+		isRed = false;
+		isGreen = false;
+		isBlue = false;
+
+		dist = new double[size];
+		nodes = new Node[size];
+		visited = new bool[size];
+
+		edgeArray = new bool*[size]; // Creates 2 edge pointer arrays, graphMatrix
+		chosenEdges = new bool*[size];
+
+		for (int i = 0; i < size; i++) {
+			edgeArray[i] = new bool[size]; // Creates 2 edge arrays
+			chosenEdges[i] = new bool[size];
+			for (int j = 0; j < size; j++) {
+				edgeArray[i][j] = false;
+				chosenEdges[i][j] = false;
+			}
+		}
+	}
+
+	GraphNode (char array[]) {
+		string line;
+		int counter = 0;
+		int i, j, color;
+		double cost;
+		bool first = true;
+		ifstream myfile(array);
+		if (myfile.is_open()) {
+			while (!myfile.eof()) {
+				if (first) {
+					myfile >> size;
+					first = false;
+					graph = new Edge*[size]; // Creates 2 edge pointer arrays, graphMatrix
+
+					for (int i = 0; i < size; i++) {
+						graph[i] = new Edge[size]; // Creates 2 edge arrays
+					}
+				} else if (counter % 5 == 0) {
+					myfile >> i;
+					counter++;
+				} else if (counter % 5 == 1) {
+					myfile >> j;
+					counter++;
+				} else if (counter % 5 == 2) {
+					myfile >> cost;
+					counter++;
+				} else if (counter % 5 == 3) {
+					myfile >> color;
+					counter++;
+				} else if (counter % 5 == 4) {
+					testColor(color, i, j);
+					graph[i][j].setDistance(cost);
+					graph[j][i].setDistance(cost);
+					counter++;
+				}
+			}
+			graph[i][j].setDistance(cost);
+			graph[j][i].setDistance(cost);
+			testColor(color, i, j);
+			myfile.close();
+		} else {
+			cout << "Unable to open file";
+		}
+	}
+
+// Changes color from int value to enum color
+
+	void testColor(int color, int i, int j) {
+		if (color == 0) {
+			graph[i][j].setColor(Red);
+			graph[j][i].setColor(Red);
+		} else if (color == 1) {
+			graph[i][j].setColor(Green);
+			graph[j][i].setColor(Green);
+		} else if (color == 2) {
+			graph[i][j].setColor(Blue);
+			graph[j][i].setColor(Blue);
+		} else if (color == 3) {
+			graph[i][j].setColor(Empty);
+			graph[j][i].setColor(Empty);
+		}
+	}
+
+// Returns graphMatrix. Used to make functions more
+// flexible
+	Edge** getGraph() {
+		return graph;
+	}
+
+// Makes the input matrix "red" and applies Dijkstra's
+// algorithm to it.
+	void makeColorGraph(char array[], int aSize) {
+		setBools(array, aSize);
+		for (int i = 0; i < size; i++) {
+			for (int j = i; j < size; j++) {
+				if (isRed && isGreen && isBlue) {
+					break;
+				} else if (isRed && isGreen) {
+					if (graph[i][j].getColor() != Red
+							&& graph[i][j].getColor() != Green) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				} else if (isRed && isBlue) {
+					if (graph[i][j].getColor() != Red
+							&& graph[i][j].getColor() != Blue) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				} else if (isBlue && isGreen) {
+					if (graph[i][j].getColor() != Blue
+							&& graph[i][j].getColor() != Green) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				} else if (isRed) {
+					if (graph[i][j].getColor() != Red) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				} else if (isGreen) {
+					if (graph[i][j].getColor() != Green) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				} else if (isBlue) {
+					if (graph[i][j].getColor() != Blue) {
+						graph[i][j].setDistance(0);
+						graph[j][i].setDistance(0);
+						testColor(3, i, j);
+					}
+				}
+			}
+		}
+	}
+
+	void setBools(char array[], int size) {
+		for (int i = 0; i < size; i++) {
+			if (array[i] == 'r') {
+				isRed = true;
+			} else if (array[i] == 'g') {
+				isGreen = true;
+			} else if (array[i] == 'b') {
+				isBlue = true;
+			}
+		}
+	}
+
+// Initializes visited to false and dist to infinity.
+// Used before you start Dijkstra()
+	void beginPrims() {
+		for (int i = 0; i < size; i++) {
+			visited[i] = false;
+			dist[i] = 0;
+		}
+	}
+
+// Finds connected nodes and stores them in the node's connected array.
+	void findConnected(Edge** graphMatrix) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (graphMatrix[i][j].getDistance() != 0) {
+					nodes[i].inputConnected(j);
+					nodes[i].increaseCounter();
+				}
+			}
+		}
+	}
+
+// Frees the matrices
+	void deleteGraph(){
+		delete graph;
+	}
+
+// Apploes Dijkstra's algorithm
+	/* void dijkstra(Edge** graphMatrix) {
+	 startPrim();        // Initializes variables
+	 int smallest;
+	 int connect = 0;
+	 bool cont = true;
+	 for (int i = 0; i < size; i++) {
+	 if (i == 0) {                // Handles the 0 node differently since
+	 smallest = shortestPath(i, graphMatrix); // it is the starting point
+	 if (smallest >= size || smallest < 0) { // Smallest is the node that is closest to 0
+	 cont = false; // if(smallest>=size) then all paths are infinity.
+	 }                                      // This prevents a crash.
+	 visited[i] = true;                        // Marks 0 as visited
+	 }
+	 for (int j = 0; j < size; j++) {
+	 if (i == 0 && cont) { // Handles 0 differently. Inputs all possible values
+	 dist[j] = graphMatrix[i][j].getDist(); // into the dist[] to have a baseline to compare the
+	 }                                       // other values to
+	 else if (cont) {
+	 int count = nodes[smallest].getCounter(); // Sets count to the counter of hte closest node
+	 visited[smallest] = true; // Marks the closest node as being visited
+	 for (int x = 0; x < count; x++) {
+	 nodes[smallest].decrementCounter(); // Decrement counter since it is always one about the last input value
+	 connect = nodes[smallest].getConnected(); // Get the first node that is connected to the smallest node
+	 if ((dist[connect]
+	 > (dist[smallest]
+	 + graphMatrix[smallest][connect].getDist()))
+	 && !visited[connect]) {
+	 dist[connect] =
+	 dist[smallest]
+	 + (graphMatrix[smallest][connect].getDist()); //if the current distance is greater
+	 }                //than the distance to the current node
+	 }                     //to that node then overwrite the dist
+	 nodes[smallest].setCounter(count);    // Restore the counter
+	 smallest = shortestPath(graphMatrix); // Find next closest node
+	 if (smallest >= size || smallest < 0) { // if(smallest>=size) then all paths are infinity.
+	 cont = false;        // This will terminate the function
+	 }
+	 }
+	 }
+	 }
+	 }
+	 */
+	void prims() {
+		beginPrims();
+		int smallest, connect, curr;
+		int counter = 0;
+		for (int i = 0; i < size; i++) {
+			if (i == 0) {
+				insertEdges(i);
+				printEdges();
+				cout << endl;
+				printDistanceArray();
+				cout << endl;
+				smallest = shortestPath(graph);
+				cout << "a";
+				if (smallest >= size || smallest < 0) {
+					break;
+				}
+				visited[i] = true;
+				cout << "b";
+				chosenEdges[i][smallest] = true;
+				cout << "c";
+				counter++;
+			} else {
+				double x = INFINITY;
+				for (int j = 0; j < counter - 1; j++) {
+					insertEdges(smallest);
+					printEdges();
+					cout << endl;
+					printVisit();
+					cout << endl;
+					smallest = shortestPath(graph);
+					if (smallest >= size || smallest < 0) {
+					} else {
+						connect = visited[j];
+						curr = visited[j + 1];
+						if (graph[connect][smallest].getDistance() < x) {
+							x = graph[connect][smallest].getDistance(); // might cause crashes
+						}
+					}
+				}
+			}
+			visited[smallest] = true;
+			if (i != 0) {
+				chosenEdges[connect][smallest] = true;
+			}
+			counter++;
+			printChosen();
+			dist[smallest] = graph[i][smallest].getDistance();
+		}
+	}
+
+	void printVisit() {
+		for (int i = 0; i < size; i++) {
+			cout << visited[i] << endl;
+		}
+	}
+
+	void printEdges() {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				cout << edgeArray[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+
+	void printChosen() {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				cout << chosenEdges[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+
+	void insertEdges(int node) {
+		int count = nodes[node].getCounter();
+		nodes[node].decreaseCounter();
+		for (int i = 0; i < count; i++) {
+			int temp = nodes[node].getConnected();
+			edgeArray[node][temp] = true;
+			nodes[node].decreaseCounter();
+		}
+		nodes[node].setCounter(count);
+	}
+
+	bool checking() {
+		bool ret = true;
+		for (int i = 0; i < size; i++) {
+			if (visited[i] == false) {
+				ret = false;
+			}
+		}
+		return ret;
+	}
+
+	double sum() {
+		double total = 0.0;
+		for (int i = 0; i < size; i++) {
+			total = total + dist[i];
+		}
+		return total;
+	}
+
+// Finds the shortest path from node i to all connected nodes
+	int shortestPath(Edge** graphMatrix) {
+		int shortest = 100;
+		double lowest = INFINITY;
+		for (int j = 0; j < size; j++) {
+			for (int k = 0; k < size; k++) {
+				if (edgeArray[j][k]) {
+					if (graphMatrix[j][k].getDistance() < lowest) {
+						lowest = graphMatrix[j][k].getDistance();
+						shortest = k;
+					}
+				}
+			}
+		}
+		return shortest;
+	}
+// int count = nodes[i].getCounter();
+// while (nodes[i].getCounter() != 0) {
+// nodes[i].decrementCounter();
+// if (!nodes[i].getVisit()) {
+// int x = nodes[i].getConnected();
+// if (lowest > graphMatrix[i][x].getDist()) {
+// lowest = graphMatrix[i][x].getDist();
+// shortest = x;
+// }
+// }
+// }
+// nodes[i].setCounter(count);
+// return shortest;
+// }
+
+// Finds the shortest path based on the contest of the dist[]
+	/* int shortestPath(Edge** graphMatrix) {
+	 double lowest = INFINITY;
+	 int node;
+	 for (int i = 0; i < size; i++) {
+	 if (dist[i] < lowest && !visited[i]) {
+	 lowest = dist[i];
+	 node = i;
+	 }
+	 }
+	 return node;
+	 }
+	 */
+	int shortestPath() {
+		double lowest = INFINITY;
+		int node;
+		for (int i = 0; i < size; i++) {
+			if (dist[i] < lowest && !visited[i]) {
+				lowest = dist[i];
+				node = i;
+			}
+		}
+		return node;
+	}
+
+// Prints out graphMatrix showing the distance from one
+// node to another. For debugging purposes.
+	void printDistance(Edge** graphMatrix) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				cout << graphMatrix[i][j].getDistance() << " ";
+			}
+			cout << endl;
+		}
+	}
+
+// Prints out the matrix showing the color of the edges.
+// For debugging purposes.
+	void printColor(Edge** graphMatrix) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				cout << graphMatrix[i][j].getColor() << " ";
+			}
+			cout << endl;
+		}
+	}
+
+// Prints out the dist[]. For debugging purposes.
+	void printDistanceArray() {
+		for (int i = 0; i < size; i++) {
+			cout << dist[i] << endl;
+		}
+	}
+
+// Gets the average of the distances from node 1 to 2, 1 to 3,
+// ... , 1 to 50
+	double getAverage() {
+		double total = 0;
+		int counter = 0;
+		for (int i = 0; i < size; i++) {
+			if (dist[i] != INFINITY) {
+				total = total + dist[i];
+			} else {
+				counter++;
+			}
+		}
+		total = total / (size - counter);
+		return total;
+	}
+};
+
+#endif

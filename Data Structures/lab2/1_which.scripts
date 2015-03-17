@@ -1,0 +1,57 @@
+
+NAME
+
+   checksource - check source code for basic reasonable formatting
+
+SYNOPSIS
+
+   checksource [filename...]
+
+DESCRIPTION
+
+   Checks the input files for basic formatting sanity.  Prints
+   complaints for strange looking files and a summary.  If no
+   filenames are specified, prints out this man page.
+
+OPERANDS
+
+   Files to check for reasonable formatting.
+
+COMPLAINTS
+
+   The only invisible characters may be spaces and newlines,
+   except for a Makefile, where some lines begin with a tab.
+   Form feed is acceptable on a line by itself if used for
+   formatting purposes.
+
+   Printable characters are any ISO-Latin-1 characters in the
+   range '!' to '~' and '¡' to 'ÿ' (\u0021 to \u007E and
+   \u00A1 to \u00FF).  See:  http://www.unicode.org/charts/.
+   ASCII files contain a subset of these characters.
+
+   Each line must end in a newline.  The last character of the
+   file must be a newline.  M*cr*$*ft format files are not
+   acceptable.  If you use emacs, be sure that your .emacs file
+   has:  (setq require-final-newline t)
+
+   You may remove carriage returns from your file with one of
+   the following commands:
+
+   . Perl:    perl -pi -e 's/\r//' filename
+   . vi:      :g/^V^M/s///
+   . shell:   dos2unix oldfilename >newfilename
+
+   No line may have more than 72 characters before the newline.
+   Or:  with ``cat -n | expand'', lines including line numbers
+   should not be longer than 80 characters.  Long lines should
+   be wrapped in a sensible place, such as after a comma, and
+   properly indented on the next line.
+
+   Indent with 3 spaces for each level, and do not use tabs.
+
+   In a Makefile, a tab is required as the first character on a
+   shell command, but should never be used after a non-TAB
+   character.
+
+$Id: checksource,v 1.25 2010-12-20 19:47:00-08 - - $
+

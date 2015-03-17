@@ -1,0 +1,193 @@
+head	1.2;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.2
+date	2011.04.29.11.32.23;	author -;	state -;
+branches;
+next	1.1;
+
+1.1
+date	2011.04.29.09.50.22;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@-
+@
+text
+@// Fernando Carrillo fcarril1@@ucsc.edu
+// Steven Pan span3@@ucsc.edu
+// $Id: bcat.c,v 1.1 2011-04-29 02:50:22-07 - - $
+
+//
+// NAME
+//    bcat - concatenate and display files
+//
+// SYNOPSIS
+//    bcat [filename...]
+//
+// DESCRIPTION
+//    The `bcat' utility reads each file in sequence and writes it
+//    to stdout.  If any filename is given as the single character
+//    `-', stdin is read at that point.  If no filenames are given
+//    then stdin is read as the only file. Scans for flags -m -n
+//    -s -v and implements their desired functions
+//
+
+#include <errno.h>
+#include <libgen.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+//
+// Creates flags m,n,s,v later to be used as functions
+//
+
+typedef enum {FALSE = 0, TRUE = 1} bool;
+
+struct options {
+   bool moretitles;   // -m print file titles
+   bool numberlines;  // -n print line numbers in left column
+   bool squeeze;      // -s squeeze multiple blank lines into one
+   bool visiblechars; // -v display unprintable visibly
+};
+
+//
+// cat -
+// Copy the contents of an already-opened file to stdout.
+//
+
+void catfile(FILE *input,struct options *options_ref,char *filename){
+   int linenum = 0;
+   int newline = 0;
+   int newlinecount = 0;
+   // Prints title
+   if ( options_ref->moretitles == 1 ){
+      printf("\n");
+      for (int i = 0; i<64; i++) printf(":");
+      printf("\n");
+      printf("%s\n", filename);
+      for (int i = 0; i<64; i++) printf(":");
+      printf("\n\n");
+   }
+   
+   // Prints file while checking for -n, -s, and -v
+   for (;;) {
+      int byte = getc (input);
+      if (byte == EOF) {
+         break;
+      }
+      if (byte == '\n') {
+         newline = 1;
+         newlinecount++;
+         linenum++;
+         if (newlinecount >2) newlinecount = 2;
+         else printf ("\n");
+      }
+      else if (options_ref->numberlines == 1 && newline == 1) {
+         printf("%6d  ", linenum);
+         newline = 0;
+         (void) putchar (byte);
+      }
+      else {
+         (void) putchar (byte);
+         if (newlinecount > 0) {
+            newlinecount = 0;
+         }
+      }
+   };
+}
+
+
+//
+// main -
+// Loop over files analyze options and cat each of them to 
+// stdout. Print error messages if appropriate. 
+//
+
+int main (int argc, char **argv) {
+   char *progname = basename (argv[0]);
+   int exit_status = EXIT_SUCCESS;
+   struct options options;
+   memset (&options, 0, sizeof options); // set all opts FALSE
+
+   //
+   // Scans arguments and set flags.
+   //
+   opterr = FALSE;
+   for (;;) {
+      int option = getopt (argc, argv, "mnsv");
+      if (option == EOF) break;
+      switch (option) {
+         case 'm': options.moretitles   = TRUE; break;
+         case 'n': options.numberlines  = TRUE; break;
+         case 's': options.squeeze      = TRUE; break;
+         case 'v': options.visiblechars = TRUE; break;
+         default : fflush (NULL);
+                   fprintf (stderr, "%s: -%c: invalid option\n",
+                            progname, optopt);
+                   fflush (NULL);
+                   exit_status = EXIT_FAILURE;
+      };
+   };
+
+   if (argc == 1) {
+      char *filename = argv[1];
+      catfile (stdin, &options, filename);
+   }else{
+      for (int argi = 1; argi < argc; ++argi) {
+         if (strcmp (argv[argi], "-") == 0) {
+            char *filename = argv[argi];
+            catfile (stdin, &options, filename);
+         }
+         else{
+            FILE *input = fopen (argv[argi], "r");
+            char *filename = argv[argi];
+            if (input == NULL) {
+               fflush (NULL);
+               fprintf (stderr, "%s: %s: %s\n", progname,
+                        argv[argi], strerror (errno));
+               fflush (NULL);
+               exit_status = EXIT_FAILURE;
+            }else{
+               catfile (input, &options, filename);
+               fclose (input);
+            };
+         };
+      };
+   };
+   return exit_status;
+}
+
+
+@
+
+
+1.1
+log
+@-
+@
+text
+@d3 1
+a3 1
+// $Id: bcat.c,v 1.2 2011-04-29 02:37:08-07 - - $
+d53 1
+a53 1
+      for (int i = 0; i<64; i++) printf(",");
+d56 1
+a56 1
+      for (int i = 0; i<64; i++) printf(",");
+@

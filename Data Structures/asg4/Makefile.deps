@@ -1,0 +1,6 @@
+# Makefile.deps created Thu May 12 12:39:09 PDT 2011
+auxlib.o: auxlib.c auxlib.h
+hashset.o: hashset.c hashset.h auxlib.h strhash.h
+spellchk.o: spellchk.c auxlib.h hashset.h yyextern.h
+strhash.o: strhash.c strhash.h auxlib.h
+

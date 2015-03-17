@@ -1,0 +1,75 @@
+Assignment 1: Design Document 
+Steven Pan <span3>
+CMPS 111, Winter 2014
+
+Purpose
+
+The purpose of this project is to create a basic shell that works within Minix 3.
+The shell must support functions that a standard unix shell would, and should be able 
+to handle semicolons, pipes, and other types of input.
+
+Available Resources
+
+The makeargv.c and shell.c files on the class page are provided.  I chose to parse
+the input with a lexer instead, as it was something that I picked up last quarter
+in CMPS 104a and was easier for me to incorporate into the program.
+
+We were also given the pseudocode for a shell, which was:
+
+while(TRUE) {
+	print_prompt();
+	read_command(command,parameters);
+	if (fork() != 0) {
+		waitpid(-1,&status,0);
+	} else {
+		execve(command,parameters,0);
+	}
+}
+
+Design 
+
+The design in general is to go into a loop that continuously asks for input.
+Upon receiving input, we must check to see what was inputted, and execute
+the requested command.  If parentheses, pipes, dashes, semicolons, or other symbols
+are in the input, they must be seen and handled accordingly.  The program must also
+remember the directory that everything is taking place in, and update the directory
+when asked to move to another one.  When the user inputs exit, the shell will exit.
+
+Private members and public functions are explained below.
+
+New private members
+
+struct argPaths //stores input output and pipe names if there are any.
+struct argFlags //Keeps track of parenthese, pipes, I/O, and semicolons in arguments.
+int terminate   //Starts at at 0, and is set to 1 when the shell has run through everything, which causes the loop to end.
+int loop        //Regulated by terminate, but also ends if exit is entered into the prompt.
+
+Design of each function
+
+void beginShell()
+  Ask for user input.
+  Checks if exit was entered, ends program if it was.
+  Splits up arguments to handle each individually.
+  Checks if parenthese are entered, enter a subshell if they are.
+  Resets flag values for the next loop through.
+
+void parseArgs (argFlags *flags, argPaths *paths, char **args, char **child_args)
+  Runs processSym for each argument.
+  Checks for left parentheses.
+  
+int processSym (int *i, char **args, argFlags *flags, argPaths *paths)
+  Remove parentheses if they are found.
+  Open files for input or output if '<' or '>' detected.
+  Split up arguments if semicolon.
+
+void execute (argFlags *flags, argPaths *paths, char **child_args) 
+  Execute the input that is entered.
+   
+
+Testing
+
+The test strategy will be to get the shell working on the unix timeshare first,
+ensuring that most if not all possible shell commands are functional.  Then I will
+be moving the code onto Minix and seeing if it works there, while fixomg any issues
+that occur there.
+

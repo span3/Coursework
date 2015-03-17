@@ -1,0 +1,19 @@
+This is a simple file of test data to test the Huffman encoding
+program.  the file with the extension .coding and the same
+prefix as this file is the output from the file.
+
+Note that very frequently occurring letters have short encoding
+strings and that very rarely occurring letters have much longer
+encoding strings.  The space character occurs most frequently
+and thus has the shortest code, and is printed as \x20.  The
+newline character occurs invisibly at the end of every line and
+is printed in hexadecimal as \x0A.  There are no carriage return
+characters in the file.
+
+In English, the letters listed in decreasing frequency order are
+etoain shrdlu.  so if you need to buy a vowel, buy ``e''.  And
+``t'' occurs more frquently than any other consonant.  This is
+statistically true of English, of course, but not necessarily
+true of any particular document.
+
+

@@ -1,0 +1,48 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@ * @;
+
+
+1.1
+date	2011.05.20.05.03.43;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@/* $Id: queue.h,v 1.1 2011-04-29 19:54:20-07 - - $ */
+
+#ifndef __QUEUE_H__
+#define __QUEUE_H__
+
+#include "auxlib.h"
+
+typedef struct queue *queue_ref;
+typedef char *queue_item_t;
+
+queue_ref new_queue (void);
+
+void free_queue (queue_ref);
+
+void insert_queue (queue_ref, queue_item_t);
+
+queue_item_t remove_queue (queue_ref);
+
+bool isempty_queue (queue_ref);
+
+bool is_queue (queue_ref);
+
+#endif
+
+
+@

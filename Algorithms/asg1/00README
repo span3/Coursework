@@ -1,0 +1,6 @@
+The Java code in this directory corresponds to the appendix of
+Computer Algorithms, Third Edition by Sara Baase and Allen Van Gelder.
+Some List-related classes originate elsewhere in the text, and
+the keyword ``public'' has been inserted before ``class''.
+Also, imports have been made more specific, to import only what is used,
+rather than ".*".

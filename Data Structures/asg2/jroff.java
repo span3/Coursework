@@ -1,0 +1,215 @@
+// Fernando Carrillo fcarril1@ucsc.edu
+// Steven Pan span3@ucsc.edu
+// $Id: jroff.java,v 1.1 2011-04-26 03:47:01-07 - - $
+//
+// Assignment 2
+// Description: Simple text formatter that reads in
+//    files and edits them based on commands within
+//    the file.
+// Commands: 
+//    .\"   The line is simply discarded and does not 
+//    break a paragraph. Any other command causes the 
+//    current paragraph to be dumped and the queue to 
+//    be emptied.
+//
+//   .bp   The program switches to top-of-page mode.
+//
+//   .br   Call dump paragraph. The queue is flushed
+//   to the standard output and then cleared.
+//
+//   .cc C   Change the control character to `C', for 
+//   any character.Your must now retrofit the code 
+//   that looks for dots in the first position and 
+//   recognize this character instead.
+//
+//   .in N   Every line printed is moved to the right 
+//   by both the page offset and the indentation.This 
+//   number is remembered for future output.
+//
+//   .ll N   Set the line length as specified. The 
+//   dump paragraph routine wraps when a word exceeds
+//   this length.
+//
+//   .mt N   Sets the heights of the top margin.
+//
+//   .tl 'left'mid'right'   Splits the argement line
+//   into three parts at the apostrophes. This page
+//   header is then remembered.
+//   
+//   .pl N   Sets the page length to this number. 
+//   A page eject occurs whenever this directive 
+//   is found, or printing a line causes the page 
+//   to be full.
+//
+//   .po N   Every line of output except for empty
+//   lines is preceeded by this number of spaces
+//
+//   .sp N    Dump the paragraph.  Then remember 
+//   the number of blank lines to be printed.  
+//   The next time a paragraph is dumped, this 
+//   number of empty lines is printed. However, 
+//   if printing that number of empty lines would 
+//   fill the page, the program switches to 
+//   top-of-page mode.
+
+
+  
+import java.io.*; 
+import java.util.Scanner; 
+import static java.lang.System.*;
+
+class jroff{
+   static final String STDIN_NAME = "-";
+
+   static void scanfile(String filename,Scanner infile,
+   linkedqueue queue){
+      String start = ".";
+      int charlength = 65, begin = 0;
+      int indent = 10, offset = 0, margin = 6, blanklines = 0;
+      boolean pagestart = true, mod = false, done = false;;
+      commands commands = new commands();
+      // Runs loop until end of file
+      for (int linenr = 1; infile.hasNextLine(); ++linenr) {
+         String line = infile.nextLine();
+         line = line.trim();
+         String[] words = line.split ("\\s+");
+         // Inserts words from paragraphs into queue
+         if (!words[0].startsWith(".")) {
+            if (mod) {
+               done = true;
+            }
+            for (int i = 0; i < words.length; i++) {
+               if ((words[i]).length() == 0) {
+                  queue.insert(" ");
+               }
+               else {
+                  queue.insert(words[i]);
+               }
+            }
+         }
+         // Finds commands executes them while saving preferences 
+         if (words.length > 0 && words[0].startsWith (start)) {
+            if (mod&&done||(words[0].substring(0,2).equals(".sp"))){
+               charlength = commands.lineLength();
+               margin = commands.getMargin();
+               offset = commands.getOffset();
+               printparagraph(queue,charlength,indent,pagestart,
+                  blanklines,offset,margin);
+               pagestart = false;
+               mod = false;   
+               blanklines = 0;
+               done = false;
+            }
+            commands.cmd command = commands.cmd_map.get (words[0]);
+            if (command == null) {
+               auxlib.warn (filename, linenr, words[0],
+                     "invalid command");
+            }
+            else {
+               command.exec(words);
+               mod = true;
+               start = commands.getChanged();
+               blanklines = commands.getLines();
+            }
+         }
+      }
+      // prints paragraph after finding command
+      printparagraph (queue,charlength,indent,pagestart,
+         blanklines,offset,margin);
+      out.printf("\n");
+   }
+
+   // Method used to take words out of queue and print paragraphs
+   static void printparagraph(linkedqueue queue,int charlength,
+   int indent,boolean pagestart,int blanklines,int offset,
+   int margin) {
+      int page = 1;
+      if (pagestart) {
+         for (int i = 0; i < margin/2 -1; i++) {
+            out.printf("\n");
+         }
+         out.printf("%75d", page);
+         for (int i = 0; i < margin/2; i++) {
+            out.printf("\n");
+         }
+      }
+      StringBuffer words = new StringBuffer();
+      String next = "";
+      for (int i = 1; i < blanklines; i++) {
+         out.printf("\n");
+      }
+      while (!queue.empty()) {
+         next = (String) queue.remove();
+         if (next.equals(" ")){
+            for (int i = 0; i < (indent + offset); i++) {
+               out.printf(" ");
+            }
+            out.printf("%s\n\n", words);
+            words.setLength(0);
+         }
+         else if (words == null) {
+            words.append(next);
+         }
+         else if (next.endsWith(".") ||
+                  next.endsWith("?") ||
+                  next.endsWith("!") ||
+                  next.endsWith(";") ||
+                  next.endsWith(":") ) {
+            if (words.length() + next.length() > charlength) {
+               for (int i = 0; i < indent + offset; i++) {
+                  out.printf(" ");
+               }
+               out.printf("%s\n", words);
+               words.setLength(0);
+               words.append(next + "  ");
+            }
+            else {
+               words.append(next + "  ");
+            }
+         }
+         else {
+            if (words.length() + next.length() > charlength) {
+               for (int i = 0; i < indent + offset; i++) {
+                  out.printf(" ");
+               }
+               out.printf ("%s\n", words);
+               words.setLength(0);
+               words.append(next + " ");
+            }
+            else {
+               words.append(next + " ");
+            }
+         }
+      }
+      if (words != null) {
+         for (int i = 0; i < indent; i++) {
+            out.printf(" ");
+         }
+         out.printf ("%s", words);
+      }
+      out.printf("\n\n");
+   }
+
+   public static void main (String[] args) {
+      linkedqueue wordqueue = new linkedqueue ();
+      // scans input files
+      if (args.length == 0) {
+         scanfile (STDIN_NAME, new Scanner (in), wordqueue);
+      }else {
+         for (String filename : args) {
+            if (filename.equals (STDIN_NAME)) {
+               scanfile (STDIN_NAME, new Scanner (in), wordqueue);
+            }else {
+               try {
+                  Scanner scan = new Scanner (new File (filename));
+                  scanfile (filename, scan, wordqueue);
+                  scan.close();
+               }catch (IOException error) {
+                  auxlib.warn (error.getMessage());
+               }
+            }
+         }
+      }
+   }
+
+}

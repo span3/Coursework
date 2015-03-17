@@ -1,0 +1,60 @@
+Assignment 2: Design Document 
+Steven Pan <span3>
+CMPS 111, Winter 2014
+
+Purpose
+
+The purpose of this project is to modify the minix scheduler to include a
+lottery scheduler.  The lottery scheduler should pull a random ticket and then
+run the process holding the ticket for a quantum.  There should also be a dynamic
+allocator that takes away a ticket from a process when it runs a full quantum,
+or gives it one when it blocks.
+
+We were also asked to implement an alternate lottery scheduler.  I could not come up
+with an interesting alternate algorithm, so I just chose to make a stricter lottery
+by halving the count of a winning process, and giving a losing process double the
+tickets.  I think this would create a slightly fairer scheduler.
+
+Available Resources
+
+We are given longrun.c, a program that is used to test the scheduler by running
+processes for a long length of time.  Many details about the scheduler and how it
+works were also found in a report about the minix scheduler (found at 
+http://www.minix3.org/docs/scheduling/report.pdf) that was given to us.
+
+Design
+
+config.h will be modified to have a winner and loser queue.  The default variables
+should also be modified so that these new queues will be included.
+
+schedproc.h will be modified to include ticketsNum, which stores the number of tickets
+that a process has, and ticketsMax, which stores the maximum amount of tickets that
+the process can hold at one time.
+
+schedule.c will have the following methods modified:
+
+do_noquantum: This occurs after a process has successfully run a quantum, so it is 
+the ideal place to put the lottery call, and also take tickets away from the process
+that had just completed.
+
+do_start_scheduling: Since this is where processes are first initialized, it is a
+good place to specify the amount of tickets each process gets.  The counter that
+tracks the total tickets should also be incremented here.
+
+do_nice: Add an old_tickets variable so that the rollback function will also apply
+to the amount of tickets in the process.
+
+schedule.c will have the following methods ADDED:
+
+allot_tickets:  Add the amount of tickets specified to a process.
+
+do_lottery: Find the total amount of tickets throughout all processes, then choose
+a random number (this is the "winner").  Find the process holding the winning
+ticket and move it into the winner's queue, and then put all the other processes
+into the loser's queue.  Losers should also receive an extra ticket in the dynamic
+implementation, and two extra tickets in the alternate.
+
+Testing
+
+The test strategy will be to run longrun.c and observe what happens after it runs
+for a decent amount of time.

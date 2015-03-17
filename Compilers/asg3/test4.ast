@@ -1,0 +1,42 @@
+ROOT "" 0.0.0
+|   STRUCT "struct" 3.4.0
+|   |   TYPEID "foo" 3.4.7
+|   |   INT "int" 3.5.3
+|   |   |   IDENT "a" 3.5.7
+|   INITDECL "=" 3.8.6
+|   |   INT "int" 3.8.0
+|   |   |   IDENT "a" 3.8.4
+|   |   INTCON "6" 3.8.8
+|   INITDECL "=" 3.9.6
+|   |   TYPEID "foo" 3.9.0
+|   |   |   IDENT "b" 3.9.4
+|   |   NEW "new" 3.9.8
+|   |   |   TYPEID "foo" 3.9.12
+|   '=' "=" 3.10.4
+|   |   '.' "." 3.10.1
+|   |   |   IDENT "b" 3.10.0
+|   |   |   FIELD "a" 3.10.2
+|   |   INTCON "8" 3.10.6
+|   '=' "=" 3.11.2
+|   |   IDENT "a" 3.11.0
+|   |   '+' "+" 3.11.12
+|   |   |   '*' "*" 3.11.6
+|   |   |   |   IDENT "a" 3.11.4
+|   |   |   |   '.' "." 3.11.9
+|   |   |   |   |   IDENT "b" 3.11.8
+|   |   |   |   |   FIELD "a" 3.11.10
+|   |   |   INTCON "6" 3.11.14
+|   ';' ";" 3.11.16
+|   CALL "(" 3.13.5
+|   |   IDENT "puti" 3.13.0
+|   |   IDENT "a" 3.13.6
+|   CALL "(" 3.14.5
+|   |   IDENT "putc" 3.14.0
+|   |   CHARCON "' '" 3.14.6
+|   CALL "(" 3.15.5
+|   |   IDENT "puti" 3.15.0
+|   |   '.' "." 3.15.7
+|   |   |   IDENT "b" 3.15.6
+|   |   |   FIELD "a" 3.15.8
+|   CALL "(" 3.16.5
+|   |   IDENT "endl" 3.16.0

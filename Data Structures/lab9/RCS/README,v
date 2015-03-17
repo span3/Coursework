@@ -1,0 +1,28 @@
+head	1.1;
+access;
+symbols;
+locks;
+comment	@# @;
+
+
+1.1
+date	2011.06.02.03.30.56;	author -;	state -;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@-
+@
+text
+@Steven Pan span3@@ucsc.edu
+
+Host: unix2.ic.ucsc.edu
+
+Comments: I GIVE UP!
+@
